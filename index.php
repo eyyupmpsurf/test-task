@@ -17,11 +17,8 @@ $orders->addOrder(5);
 
 $getOrders = $orders->getOrders();
 
-$sum = $purchases->costPayment(3);
+$costPayment = $purchases->costPayment(3);
 
-$sum = $purchases->paymentOrder(3);
+$purchases->paymentOrder(3);
 
-
-
-
-
+$buyerRefused = $purchases->buyerRefused();

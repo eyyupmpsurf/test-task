@@ -71,4 +71,25 @@ class Purchases extends BaseClass
 
         return $result;
     }
+
+    /**
+     * Стоимость товаров от которых отказался покупатель
+     * @return mixed
+     */
+    public function buyerRefused(): mixed
+    {
+        $sql = "
+            with product_count as (
+                SELECT product_count FROM orders WHERE status = 1 ORDER BY id DESC LIMIT 1
+            ), product_purchased_count as (
+                SELECT product_purchased_count FROM purchases ORDER BY id DESC LIMIT 1
+            )
+            SELECT pc.product_count - p.product_purchased_count as refused_count FROM product_count as pc, product_purchased_count as p;";
+
+        $refused_count = $this->db->query($sql)[0]['refused_count'];
+
+        $productPrice = "SELECT price * $refused_count as refused_price FROM price_history ORDER BY id DESC LIMIT 1; ";
+
+        return $this->db->query($productPrice)[0]['refused_price'];
+    }
 }
