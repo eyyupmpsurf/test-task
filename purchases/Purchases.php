@@ -82,7 +82,7 @@ class Purchases extends BaseClass
             with product_count as (
                 SELECT product_count FROM orders WHERE status = 1 ORDER BY id DESC LIMIT 1
             ), product_purchased_count as (
-                SELECT product_purchased_count FROM purchases ORDER BY id DESC LIMIT 1
+                SELECT product_purchased_count FROM $this->tableName ORDER BY id DESC LIMIT 1
             )
             SELECT pc.product_count - p.product_purchased_count as refused_count FROM product_count as pc, product_purchased_count as p;";
 

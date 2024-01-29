@@ -38,4 +38,16 @@ class PriceHistory extends BaseClass
 
         return $result['price'];
     }
+
+    /**
+     *  Получить цену которая действовала в определенный день
+     * @param $date
+     * @return array
+     */
+    public function getPriceDate($date): array
+    {
+        $sql = "SELECT * FROM $this->tableName WHERE created_at = $date; ";
+
+        return $this->db->query($sql);
+    }
 }

@@ -11,6 +11,8 @@ $purchases  = new Purchases();
 
 $priceHistory->addHistory(100);
 
+$priceDate = $priceHistory->getPriceDate('2023-01-01');
+
 $currentPrice = $priceHistory->getCurrentPrice();
 
 $orders->addOrder(5);
