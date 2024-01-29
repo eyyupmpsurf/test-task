@@ -46,8 +46,8 @@ class PriceHistory extends BaseClass
      */
     public function getPriceDate($date): array
     {
-        $sql = "SELECT * FROM $this->tableName WHERE created_at = $date; ";
+        $sql = "SELECT price FROM $this->tableName WHERE created_at = $date ORDER BY id DESC LIMIT 1; ";
 
-        return $this->db->query($sql);
+        return $this->db->query($sql)[0]['price'] ?? [];
     }
 }
