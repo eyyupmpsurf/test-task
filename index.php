@@ -1,26 +1,31 @@
 <?php
 
 require __DIR__ . "\base\BaseClass.php";
-require __DIR__ . "\history\PriceHistory.php";
 require __DIR__ . "\orders\Orders.php";
 require __DIR__ . "\purchases\Purchases.php";
 
-$priceHistory  = new PriceHistory();
 $orders  = new Orders();
 $purchases  = new Purchases();
 
-$priceHistory->addHistory(100);
+$product_1 = 1;
+$product_2 = 2;
 
-$priceDate = $priceHistory->getPriceDate('2023-01-01');
+/* Добавление заказа */
+//$order_id = 4;
+$order_id = $orders->getNextOrderId();
+$orders->addOrder($order_id, $product_1, 3);
+$orders->addOrder($order_id, $product_2, 5);
+/* _________________ */
 
-$currentPrice = $priceHistory->getCurrentPrice();
+/* рассчитать стоимость оплаты для покупателя  */
+$sum = $purchases->costPayment($order_id);
+print_r($sum . "\n");
 
-$orders->addOrder(5);
+/* Оплата товара */
+$purchases->paymentOrder($order_id, $product_1, 0);
+$purchases->paymentOrder($order_id, $product_2, 2);
+/* __________________ */
 
-$getOrders = $orders->getOrders();
-
-$costPayment = $purchases->costPayment(3);
-
-$purchases->paymentOrder(3);
-
-$buyerRefused = $purchases->buyerRefused();
+/* стоимость оставшихся товаров в магазине */
+$buyerRefused = $purchases->buyerRefused($order_id);
+print_r($buyerRefused);
