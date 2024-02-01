@@ -73,7 +73,9 @@ class Purchases extends BaseClass
      * product_id - номер проодукта
      * product_order_count - количество заказанных штук товара
      * product_purchased_count - количество купленных штук товара
-     * buyerRefused - сена разницы заказанных и купленных штук
+     * buyerRefused - цена разницы заказанных и купленных штук
+     * buyerRefusedSum - последнее значение в списке из ответа запроса и есть общая стоимость всех товаров
+     * от которых отказался покупатель
      * @param $order_id
      * @return array
      */
@@ -82,11 +84,12 @@ class Purchases extends BaseClass
         $sql = "
             SELECT o.order_id AS order_id, o.product_id AS product_id, o.product_count AS product_order_count,
                    IFNULL(p.product_purchased_count, 0) AS product_purchased_count,
-                   IF(o.status = 1, p2.price * (o.product_count - p.product_purchased_count), p2.price * o.product_count) AS buyerRefused
-            FROM orders AS o
+                   IF(o.status = 1, @sum := p2.price * (o.product_count - p.product_purchased_count), @sum := p2.price * o.product_count) AS buyerRefused,
+                   @sumAll := @sumAll + @sum as buyerRefusedSum
+            FROM (SELECT @sumOne := 0) AS init1, (SELECT @sumAll := 0) AS init2, orders AS o
             LEFT JOIN purchases p ON o.order_id = p.order_id AND o.product_id = p.product_id
             JOIN products p2 ON o.product_id = p2.id
-            WHERE o.order_id = $order_id;";
+            WHERE o.order_id = $order_id; ";
 
         return $this->db->query($sql);
     }

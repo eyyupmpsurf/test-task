@@ -19,13 +19,18 @@ $orders->addOrder($order_id, $product_2, 5);
 
 /* рассчитать стоимость оплаты для покупателя  */
 $sum = $purchases->costPayment($order_id);
-print_r($sum . "\n");
+//print_r($sum . "\n");
 
 /* Оплата товара */
 $purchases->paymentOrder($order_id, $product_1, 0);
 $purchases->paymentOrder($order_id, $product_2, 2);
 /* __________________ */
 
-/* стоимость оставшихся товаров в магазине */
+/* стоимость каждых оставшихся товаров в магазине */
 $buyerRefused = $purchases->buyerRefused($order_id);
-print_r($buyerRefused);
+//print_r($buyerRefused);
+
+/* общая стоимость всех товаров от которых отказался покупатель */
+$allBuyerRefused = end($buyerRefused);
+$allBuyerRefused = $allBuyerRefused['buyerRefusedSum'];
+//print_r($allBuyerRefused);
